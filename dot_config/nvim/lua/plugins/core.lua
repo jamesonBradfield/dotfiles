@@ -62,11 +62,10 @@ return {
   {
     -- Treesitter: Advanced syntax highlighting and code parsing.
     'nvim-treesitter/nvim-treesitter',
-    branch = 'master',
     lazy = false,
     build = ':TSUpdate',
     config = function()
-      require('nvim-treesitter.configs').setup {
+      require('nvim-treesitter.config').setup {
         ensure_installed = { 'bash', 'gdscript', 'godot_resource', 'gdshader', 'lua', 'vim', 'vimdoc', 'markdown', 'markdown_inline', 'python' },
         auto_install = true,
         highlight = {
