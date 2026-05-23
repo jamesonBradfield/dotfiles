@@ -46,21 +46,22 @@ return {
       adapter = 'deepseek',
       adapters = {
         deepseek = function()
-          return require("codecompanion.adapters").extend("deepseek", {
+          return require('codecompanion.adapters').extend('deepseek', {
             env = {
               api_key = "cmd:printenv DEEPSEEK_API_KEY | tr -d '\\r\\n '",
             },
           })
-        end
+        end,
       },
       strategies = {
         chat = { adapter = 'deepseek' },
         inline = { adapter = 'deepseek' },
+        agent = { adapter = 'deepseek' },
       },
       mcp = {
         servers = {
           iwe = {
-            cmd = { "iwec" },
+            cmd = { 'iwec' },
           },
           -- thunk = {
           --   cmd = { "/home/mcraf/Projects/thunk/.venv/bin/python", "/home/mcraf/Projects/thunk/mcp_server.py" },
@@ -74,10 +75,10 @@ return {
           -- },
         },
         opts = {
-          default_servers = { "iwe" },
+          default_servers = { 'iwe' },
         },
       },
       display = { action_palette = { provider = 'snacks' } },
     },
-  }
+  },
 }
