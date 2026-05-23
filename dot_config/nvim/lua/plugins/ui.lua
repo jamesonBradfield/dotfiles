@@ -2,12 +2,34 @@ local keys = require 'keys'
 
 return {
   {
-    -- Dracula Colorscheme
-    'Mofiqul/dracula.nvim',
+    -- Catppuccin Colorscheme (matches WezTerm color_scheme)
+    'catppuccin/nvim',
+    name = 'catppuccin',
     lazy = false,
     priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'dracula'
+    opts = {
+      flavour = 'mocha',
+      transparent_background = false,
+      term_colors = true,
+      dim_inactive = { enabled = false },
+      integrations = {
+        cmp = true,
+        gitsigns = true,
+        indent_blankline = { enabled = true },
+        lualine = true,
+        markdown = true,
+        mason = true,
+        neotree = true,
+        notify = true,
+        native_lsp = { enabled = true },
+        telescope = { enabled = false }, -- Using snacks picker
+        treesitter = true,
+        which_key = true,
+      },
+    },
+    config = function(_, opts)
+      require('catppuccin').setup(opts)
+      vim.cmd.colorscheme 'catppuccin'
     end,
   },
   {
@@ -24,7 +46,7 @@ return {
       end
 
       require('lualine').setup {
-        options = { theme = 'dracula-nvim' },
+        options = { theme = 'catppuccin' },
         sections = {
           lualine_b = {
             'branch',

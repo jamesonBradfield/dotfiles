@@ -46,12 +46,12 @@ return {
       vim.lsp.enable 'basedpyright'
       vim.lsp.enable 'json-lsp'
 
-      -- Godot WSL Bridge Override
+      -- Godot LSP (mirrored networking – 127.0.0.1 works across WSL2 + Windows)
       vim.api.nvim_create_autocmd('FileType', {
         pattern = { 'gdscript', 'gdscript3' },
         callback = function(args)
           vim.lsp.config('gdscript', {
-            cmd = { 'godot-wsl-lsp', '--host', '172.23.32.1' },
+            cmd = { 'godot-wsl-lsp', '--host', '127.0.0.1' },
             root_markers = { 'project.godot', '.git' },
             -- Modern Neovim 0.11+ way to find root using buffer ID
             root_dir = function()
@@ -67,6 +67,20 @@ return {
         vim.cmd 'set ft=gdscript'
         vim.cmd 'LspStart gdscript'
       end, {})
+
+      -- Also start the Godot LSP automatically when entering a .gd buffer
+      vim.api.nvim_create_autocmd('BufEnter', {
+        pattern = { '*.gd', '*.gdshader' },
+        callback = function()
+          vim.schedule(function()
+            local clients = vim.lsp.get_clients { name = 'gdscript' }
+            if #clients == 0 then
+              vim.cmd 'LspStart gdscript'
+            end
+          end)
+        end,
+        desc = 'Auto-start Godot LSP for .gd files',
+      })
     end,
   },
   {

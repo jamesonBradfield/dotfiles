@@ -49,7 +49,7 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
     lazy = false,
     opts = {
-      editor_host = '172.23.32.1',
+      editor_host = '127.0.0.1',
       godot_executable = 'Godot_v4.6.2-stable_win64.exe',
       formatter = 'gdformat',
       treesitter = {

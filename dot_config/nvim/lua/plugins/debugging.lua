@@ -72,6 +72,21 @@ return {
       dap.configurations.lua = {
         { type = 'nlua', request = 'attach', name = 'Attach to running Neovim instance' },
       }
+
+      -- Godot (GDScript) DAP: talks to the Godot debugger on port 6006
+      dap.adapters.godot = {
+        type = 'server',
+        host = '127.0.0.1',
+        port = 6006,
+      }
+      dap.configurations.gdscript = {
+        {
+          type = 'godot',
+          request = 'launch',
+          name = 'Attach Godot Debugger',
+          project = '${workspaceFolder}',
+        },
+      }
     end,
   },
   {
