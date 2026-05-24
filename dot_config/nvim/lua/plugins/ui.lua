@@ -106,7 +106,7 @@ return {
       vim.api.nvim_create_autocmd('DiagnosticChanged', {
         group = vim.api.nvim_create_augroup('AutoTrouble', { clear = true }),
         callback = function()
-          local diags = vim.diagnostic.get(nil, { severity = { min = vim.diagnostic.severity.WARN } })
+          local diags = vim.diagnostic.get(nil, { severity = { min = vim.diagnostic.severity.ERROR } })
           local trouble = require 'trouble'
           if #diags > 0 then
             trouble.open { mode = 'diagnostics', focus = false }
@@ -172,10 +172,9 @@ return {
     end,
   },
   {
-    -- Render Markdown
+    -- Render Markdown: Live preview for markdown and codecompanion buffers.
     'MeanderingProgrammer/render-markdown.nvim',
     ft = { 'markdown', 'codecompanion' },
-    lazy = false,
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     opts = { latex = { enabled = false }, win_options = { conceallevel = { rendered = 2 } } },
   },

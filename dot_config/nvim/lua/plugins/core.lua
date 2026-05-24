@@ -1,6 +1,35 @@
 local keys = require 'keys'
 
 return {
+
+  {
+    -- Gitsigns
+    'lewis6991/gitsigns.nvim',
+    event = { 'BufReadPre', 'BufNewFile' },
+    opts = {
+      signs = {
+        add = { text = '┃' },
+        change = { text = '┃' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked = { text = '┆' },
+      },
+      current_line_blame = true,
+      current_line_blame_opts = { delay = 500 },
+    },
+    keys = keys.gitsigns,
+  },
+  {
+    -- Neogit
+    'NeogitOrg/neogit',
+    dependencies = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
+    cmd = 'Neogit',
+    keys = keys.neogit,
+    config = function()
+      require('neogit').setup { integrations = { diffview = true }, disable_commit_confirmation = true }
+    end,
+  },
   {
     -- Mini.files: File explorer that acts like a text buffer.
     'nvim-mini/mini.nvim',
@@ -167,32 +196,31 @@ return {
       'folke/snacks.nvim',
     },
     config = function()
-      require('iwe').setup({
+      require('iwe').setup {
         lsp = {
-          cmd = { "iwes" },
-          name = "iwes",
+          cmd = { 'iwes' },
+          name = 'iwes',
           debounce_text_changes = 500,
-          auto_format_on_save = true
+          auto_format_on_save = true,
         },
         mappings = {
           enable_markdown_mappings = true,
           enable_picker_keybindings = false,
           enable_lsp_keybindings = false,
           enable_preview_keybindings = false,
-          leader = "<leader>",
-          localleader = "<localleader>"
+          leader = '<leader>',
+          localleader = '<localleader>',
         },
         picker = {
-          backend = "auto",
-          fallback_notify = true
+          backend = 'auto',
+          fallback_notify = true,
         },
         telescope = {
           enabled = true,
           setup_config = true,
-          load_extensions = { "ui-select", "emoji" }
-        }
-      })
+          load_extensions = { 'ui-select', 'emoji' },
+        },
+      }
     end,
   },
-
 }
