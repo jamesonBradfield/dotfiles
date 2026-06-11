@@ -9,6 +9,95 @@ return {
 
     adapters = {
       http = {
+        -- Daily driver: fastest model (63 tok/s, 3.9 GB, full GPU)
+        fast = function()
+          return require('codecompanion.adapters').extend('openai_compatible', {
+            env = {
+              url = 'http://127.0.0.1:8081',
+              api_key = 'TERM',
+            },
+            name = 'fast',
+            formatted_name = 'Qwen 3.5 9B (Fast)',
+            schema = {
+              model = {
+                default = 'qwen3.5-9b-ud-q2',
+              },
+              max_tokens = {
+                default = 8192,
+              },
+            },
+            opts = {
+              temperature = 0.7,
+            },
+          })
+        end,
+        -- Coding specialist: fastest code generation (68 tok/s)
+        coder = function()
+          return require('codecompanion.adapters').extend('openai_compatible', {
+            env = {
+              url = 'http://127.0.0.1:8081',
+              api_key = 'TERM',
+            },
+            name = 'coder',
+            formatted_name = 'Coder Godot 7B Q4',
+            schema = {
+              model = {
+                default = 'qwen2.5-coder-godot-7b-q4',
+              },
+              max_tokens = {
+                default = 8192,
+              },
+            },
+            opts = {
+              temperature = 0.3,
+            },
+          })
+        end,
+        -- Reasoning: DeepSeek-V4 distilled (52 tok/s, best analysis)
+        reasoning = function()
+          return require('codecompanion.adapters').extend('openai_compatible', {
+            env = {
+              url = 'http://127.0.0.1:8081',
+              api_key = 'TERM',
+            },
+            name = 'reasoning',
+            formatted_name = 'DeepSeek-V4 Distill 9B',
+            schema = {
+              model = {
+                default = 'qwen3.5-9b-deepseekv4',
+              },
+              max_tokens = {
+                default = 8192,
+              },
+            },
+            opts = {
+              temperature = 0.3,
+            },
+          })
+        end,
+        -- Deep quality: 35B IQ1 (22 tok/s, highest quality for patient use)
+        deep = function()
+          return require('codecompanion.adapters').extend('openai_compatible', {
+            env = {
+              url = 'http://127.0.0.1:8081',
+              api_key = 'TERM',
+            },
+            name = 'deep',
+            formatted_name = 'Qwen 3.6 35B IQ1 (Deep)',
+            schema = {
+              model = {
+                default = 'qwen3.6-35b-iq1',
+              },
+              max_tokens = {
+                default = 8192,
+              },
+            },
+            opts = {
+              temperature = 0.7,
+            },
+          })
+        end,
+        -- Legacy alias: points to deep for backward compat
         qwen = function()
           return require('codecompanion.adapters').extend('openai_compatible', {
             env = {
@@ -16,7 +105,7 @@ return {
               api_key = 'TERM',
             },
             name = 'qwen',
-            formatted_name = 'Qwen 3.6 35B',
+            formatted_name = 'Qwen 3.6 35B (Legacy)',
             schema = {
               model = {
                 default = 'qwen3.6-35b-iq1',
@@ -131,7 +220,7 @@ The runner exits 0 even when it finds NO tests. A PASS means: at least one test 
 
     interactions = {
       chat = {
-        adapter = { name = 'deepseek', model = 'deepseek-v4-flash', opts = { temperature = 0.7 } },
+        adapter = { name = 'fast', model = 'qwen3.5-9b-ud-q2', opts = { temperature = 0.7 } },
         tools = {
           ['web_search'] = { enabled = false }, -- built-in requires TAVILY_API_KEY; use searxng instead
           ['searxng'] = {
@@ -195,7 +284,7 @@ KNOWLEDGE MANAGEMENT (iwe): Use the Research prompt (:CodeCompanion research) fo
           end,
         },
       },
-      inline = { adapter = { name = 'deepseek', model = 'deepseek-v4-flash', opts = { temperature = 0.7 } } },
+      inline = { adapter = { name = 'fast', model = 'qwen3.5-9b-ud-q2', opts = { temperature = 0.7 } } },
     },
     mcp = {
       servers = {
