@@ -1,0 +1,13 @@
+{{- if contains "WSL" .chezmoi.kernel.osrelease -}}
+#!/bin/bash
+# Ensure ~/winget-packages.json symlinks to Windows so winget can read it
+TARGET="/mnt/c/Users/mcraf/winget-packages.json"
+if [ ! -L "$HOME/winget-packages.json" ]; then
+    # If file exists as regular file, move it to Windows side first
+    if [ -f "$HOME/winget-packages.json" ] && [ ! -L "$HOME/winget-packages.json" ]; then
+        cp "$HOME/winget-packages.json" "$TARGET"
+        rm "$HOME/winget-packages.json"
+    fi
+    ln -sf "$TARGET" "$HOME/winget-packages.json"
+fi
+{{- end -}}
