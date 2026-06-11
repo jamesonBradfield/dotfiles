@@ -2,7 +2,7 @@
 #!/bin/bash
 set -euo pipefail
 # Reconcile Windows packages via winget when winget-packages.json changes
-# Trigger: {{ include "create_dot_config/winget-packages.json" | sha256sum }}
+# Trigger: {{ include "dot_config/winget-packages.json" | sha256sum }}
 
 WINGET_JSON="$HOME/.config/winget-packages.json"
 
