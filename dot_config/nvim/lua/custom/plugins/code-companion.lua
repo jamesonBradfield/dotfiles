@@ -273,7 +273,7 @@ KNOWLEDGE MANAGEMENT (iwe): Use :CodeCompanion research for iwe-powered investig
           cmd = { 'mcp-rtk', '--', 'npx', '@playwright/mcp@latest', '--browser=firefox' },
         },
         context = {
-          cmd = { 'mcp-rtk', '--', 'cmd.exe', '/c', 'context serve' },
+          cmd = { 'cmd.exe', '/c', 'cd /d %USERPROFILE% && context serve' },
         },
       },
       opts = { default_servers = { 'iwe', 'sequential_thinking', 'context' }, acp_enabled = true },
