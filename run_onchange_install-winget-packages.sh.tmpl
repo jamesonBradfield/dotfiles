@@ -1,0 +1,20 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+# Reconcile Windows packages via winget when winget-packages.json changes
+# Runs from WSL, calls winget on the Windows side via cmd.exe
+
+WINGET_JSON="$HOME/.config/winget-packages.json"
+
+if [ ! -f "$WINGET_JSON" ]; then
+    echo "winget-packages.json not found at $WINGET_JSON, skipping"
+    exit 0
+fi
+
+echo "Syncing winget packages from $WINGET_JSON..."
+# winget import reads the file, skips already-installed, warns on unavailable
+cmd.exe /c "winget import --import-file %USERPROFILE%\\.config\\winget-packages.json --accept-source-agreements --accept-package-agreements"
+echo "Winget sync complete."
+{{- else -}}
+# Not WSL/Linux — skip (winget is Windows-only, managed from WSL)
+echo "Skipping winget sync (not running in WSL)"
+{{- end -}}
