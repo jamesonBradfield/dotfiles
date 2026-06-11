@@ -26,7 +26,7 @@ return {
             default = { 'opencode', 'acp' },
           },
           defaults = {
-            mcpServers = {},
+            mcpServers = 'inherit_from_config',
             timeout = 120000,
           },
           parameters = {
@@ -276,7 +276,7 @@ KNOWLEDGE MANAGEMENT (iwe): Use :CodeCompanion research for iwe-powered investig
           cmd = { 'mcp-rtk', '--', 'cmd.exe', '/c', 'context serve' },
         },
       },
-      opts = { default_servers = { 'iwe', 'sequential_thinking' } },
+      opts = { default_servers = { 'iwe', 'sequential_thinking', 'context' }, acp_enabled = true },
     },
     display = { action_palette = { provider = 'mini_pick' } },
     extensions = {
