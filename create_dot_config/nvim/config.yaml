@@ -1,0 +1,45 @@
+startPort: 8081
+healthCheckTimeout: 120
+logLevel: info
+
+models:
+  "qwen3.5-9b":
+    name: "Qwen 3.5 9B"
+    cmd: >
+      /mnt/c/AI/llama/llama-server.exe --model /mnt/f/models/Qwen3.5-9B-UD-Q4_K_XL.gguf --port ${PORT}
+  "qwen3.6-27b":
+    name: "Qwen 3.6 27B"
+    cmd: >
+      /mnt/c/AI/llama/llama-server.exe --model /mnt/f/models/Qwen3.6-27B-Q6_K.gguf --port ${PORT} --ctx-size 8192
+  "qwen3.6-35b-iq1":
+    name: "Qwen 3.6 35B IQ1"
+    cmd: >
+      /mnt/c/AI/llama/llama-server.exe --model /mnt/f/models/Qwen3.6-35B-A3B-UD-IQ1_M.gguf --port ${PORT} --ctx-size 8192
+  "qwen3.6-35b-q4":
+    name: "Qwen 3.6 35B Q4"
+    cmd: >
+      /mnt/c/AI/llama/llama-server.exe --model /mnt/f/models/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf --port ${PORT} --ctx-size 8192
+  "qwopus-coder-q2":
+    name: "Qwopus Coder Q2"
+    cmd: >
+      /mnt/c/AI/llama-mtp/build/bin/llama-server.exe --model /mnt/f/models/Qwopus3.5-9B-Coder-MTP-Q2_K.gguf --port ${PORT} --ctx-size 8192
+  "qwopus-coder-q4":
+    name: "Qwopus Coder Q4"
+    cmd: >
+      /mnt/c/AI/llama-mtp/build/bin/llama-server.exe --model /mnt/f/models/Qwopus3.5-9B-Coder-MTP-Q4_K_M.gguf --port ${PORT} --ctx-size 8192
+  "qwopus-coder-q8":
+    name: "Qwopus Coder Q8"
+    cmd: >
+      /mnt/c/AI/llama-mtp/build/bin/llama-server.exe --model /mnt/f/models/Qwopus3.5-9B-Coder-MTP-Q8_0.gguf --port ${PORT} --ctx-size 8192
+  "qwen2.5.1-coder-7b-q8":
+    name: "Qwen 2.5.1 Coder 7B Q8"
+    cmd: >
+      /mnt/c/AI/llama/llama-server.exe --model /mnt/f/models/Qwen2.5.1-Coder-7B-Instruct-Q8_0.gguf --port ${PORT} --ctx-size 8192
+  "qwen2.5-coder-godot-7b-q4":
+    name: "Qwen 2.5 Coder Godot 7B Q4"
+    cmd: >
+      /mnt/c/AI/llama/llama-server.exe --model /mnt/f/models/qwen2.5-coder-7b-instruct.Q4_K_M.gguf --port ${PORT} --ctx-size 8192
+  "qwen2.5-coder-godot-7b-q8":
+    name: "Qwen 2.5 Coder Godot 7B Q8"
+    cmd: >
+      /mnt/c/AI/llama/llama-server.exe --model /mnt/f/models/qwen2.5-coder-7b-instruct.Q8_0.gguf --port ${PORT} --ctx-size 8192
