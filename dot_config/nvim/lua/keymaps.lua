@@ -37,6 +37,7 @@ vim.keymap.set('n', '<leader>bs', function()
 end, { desc = 'Open [B]uffer [S]cratch (Markdown)' })
 vim.keymap.set({ 'n', 'v' }, '<leader>cc', function() require('codecompanion').toggle() end, { desc = 'Toggle CodeCompanion' })
 vim.keymap.set({ 'n', 'v' }, '<leader>ca', '<cmd>CodeCompanionActions<CR>', { desc = 'CodeCompanion actions' })
+vim.keymap.set('n', 'ga', '<cmd>CodeCompanionCLI<CR>', { desc = 'Open OpenCode TUI (CLI)' })
 -- Diagnostic Config & Keymaps
 -- See :help vim.diagnostic.Opts
 vim.diagnostic.config {

@@ -26,9 +26,9 @@
 - Source at `stdpath('data')/lazy/codecompanion.nvim`
 
 ### Research (`research`)
-- **Tools**: `run_command`, `grep_search`, `insert_edit_into_file`
-- **MCP**: `iwe`, `sequential_thinking`
-- 3-step: Scope → Investigate → Report
+- **Tools**: `run_command`, `grep_search`, `insert_edit_into_file`, `searxng`
+- **MCP**: `iwe`, `sequential_thinking`, `context`
+- **Doc tracking**: Searches IWE doc-source notes ([[doc-sources-godot]], etc.) before deciding where to search
 
 ### GdUnit Test Generator Agentic (`gdtestv`)
 - **Tools**: `insert_edit_into_file`, `run_command`
@@ -77,18 +77,51 @@
 | `iwe` | `mcp-rtk -- cmd.exe /c cd /d C:/Users/mcraf/notes && iwec.exe` |
 | `sequential_thinking` | `mcp-rtk -- .../mcp-server-sequential-thinking.cmd` |
 | `playwright` | `mcp-rtk -- npx @playwright/mcp@latest --browser=firefox` |
+| `context` | `mcp-rtk -- cmd.exe /c context serve` — local-first API docs (Godot 4.6, React, TypeScript, Tailwind at C:\Users\mcraf\.context\) |
+
+## Adapters
+
+| Name | Type | Command |
+|------|------|---------|
+| `opencode` | ACP | `~/.opencode/bin/opencode acp` — OpenCode Sisyphus AI orchestration platform |
+| `deepseek` | HTTP | `api.deepseek.com` — DeepSeek v4 Flash (chat default) |
+| `qwen` | HTTP | `localhost:8081` — Qwen 3.6 35B (openai_compatible) |
+
+Select the `opencode` adapter in your chat buffer to use OpenCode's agent orchestration from within CodeCompanion.
 
 ## Custom Tools
 
-| Name | Path |
-|------|------|
-| `searxng` | `custom.cc_searxng` |
+| Name | Path | Params |
+|------|------|--------|
+| `searxng` | `custom.cc_searxng` | `query` (required), `engines`, `categories`, `language` (optional) |
+
+SearXNG is the default web search (built-in `web_search` disabled). Use `engines="google,wikipedia"` or `categories="general,it"` for targeted searches. For Godot docs: `engines="google"`, `query="site:docs.godotengine.org <topic>"`.
 
 ## Slash Commands
 
 | Name | Path | Description |
 |------|------|-------------|
 | `prune` | `custom.cc_dcp` | Drop duplicate and errored tool call pairs |
+
+## IWE Template Notes
+
+Template notes in the IWE graph that the LLM can reference via `iwe_find` + `iwe_retrieve`:
+
+| Note | Purpose |
+|------|---------|
+| `doc-sources-godot` | Search strategy for Godot docs (searxng `site:` queries, context, rg) |
+| `doc-sources-neovim` | Search strategy for Neovim docs (`:help`, searxng, rg plugin source) |
+| `doc-sources-codecompanion` | Search strategy for CodeCompanion docs and source code |
+| `error-solution-bank` | Hub note + template for capturing solved errors (searchable by code/version) |
+
+LLM can `iwe_create` new notes following these templates — no separate prompt library entry needed.
+
+## System Prompt
+
+The system prompt (`interactions.chat.opts.system_prompt`) includes consolidated instructions for:
+- **Documentation sources**: SearXNG (web, with engine/category filtering), context (MCP, local API docs), IWE doc-tracking notes
+- **Error bank protocol**: When an error is solved, use `:CodeCompanion capture` to persist to `[[error-solution-bank]]`
+- **IWE knowledge management**: Research and capture workflows, doc-source notes as reference
 
 ## Style Guide
 

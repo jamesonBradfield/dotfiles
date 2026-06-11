@@ -17,7 +17,7 @@ return {
         cb(msg)
       end
 
-local cmd = {
+ local cmd = {
         'rtk',
         'proxy',
         'curl',
@@ -29,6 +29,18 @@ local cmd = {
         '--data-urlencode',
         'q=' .. query,
       }
+      if args.engines then
+        table.insert(cmd, '--data-urlencode')
+        table.insert(cmd, 'engines=' .. args.engines)
+      end
+      if args.categories then
+        table.insert(cmd, '--data-urlencode')
+        table.insert(cmd, 'categories=' .. args.categories)
+      end
+      if args.language then
+        table.insert(cmd, '--data-urlencode')
+        table.insert(cmd, 'language=' .. args.language)
+      end
 
       vim.fn.jobstart(cmd, {
         stdout_buffered = true,
@@ -58,17 +70,29 @@ local cmd = {
     type = 'function',
     ['function'] = {
       name = 'searxng',
-      description = 'Searches the web using a local SearXNG instance on port 8080. Use this for general web searches, documentation, or news.',
-      parameters = {
-        type = 'object',
-        properties = {
-          query = {
-            type = 'string',
-            description = 'The search query',
-          },
-        },
-        required = { 'query' },
-      },
+       description = 'Searches the web using a local SearXNG instance on port 8080. Use this for general web searches, documentation, or news. For targeted docs, set engines (e.g., "google,wikipedia") with query prefixes like "site:docs.godotengine.org" or use categories (e.g., "general,it").',
+       parameters = {
+         type = 'object',
+         properties = {
+           query = {
+             type = 'string',
+             description = 'The search query. For doc-specific searches, prefix with site: (e.g., "site:docs.godotengine.org signals", "site:neovim.io/doc treesitter").',
+           },
+           engines = {
+             type = 'string',
+             description = 'Optional: comma-separated engine names (e.g., "google,wikipedia,github_code"). Use when you need specific engines.',
+           },
+           categories = {
+             type = 'string',
+             description = 'Optional: comma-separated categories (e.g., "general", "it", "science", "news"). Categories auto-select relevant engines.',
+           },
+           language = {
+             type = 'string',
+             description = 'Optional: language code (e.g., "en", "de", "auto"). Defaults to all languages.',
+           },
+         },
+         required = { 'query' },
+       },
     },
   },
   output = {

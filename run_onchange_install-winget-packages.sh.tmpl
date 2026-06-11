@@ -1,19 +1,47 @@
 {{- if contains "WSL" .chezmoi.kernel.osrelease -}}
 #!/bin/bash
 set -euo pipefail
-# Reconcile Windows packages via winget when winget-packages.json changes
-# Trigger: {{ include "dot_config/winget-packages.json" | sha256sum }}
+# Reconcile Windows packages via winget + sync opencode configs to Windows
+# Triggers: {{ include "dot_config/winget-packages.json" | sha256sum }}{{ include "dot_config/opencode/opencode.jsonc" | sha256sum }}{{ include "dot_config/opencode/oh-my-openagent.json" | sha256sum }}
 
+# Guard: winget must be available on the Windows side
+if ! cmd.exe /c "winget --version" >/dev/null 2>&1; then
+    echo "winget not found on Windows, skipping"
+    exit 0
+fi
+
+# ---- Helper: sync a file from WSL to Windows ----
+sync_to_windows() {
+    local wsl_path="$1"
+    local win_path="$2"
+    local dir
+    dir="$(dirname "$win_path")"
+    if [ ! -d "$dir" ]; then
+        mkdir -p "$dir" || { echo "FAILED: cannot create $dir" >&2; return 1; }
+    fi
+    cp "$wsl_path" "$win_path" || { echo "FAILED: $wsl_path -> $win_path" >&2; return 1; }
+    echo "  synced: $wsl_path -> $win_path"
+}
+
+# ---- Winget packages ----
 WINGET_JSON="$HOME/.config/winget-packages.json"
-
 if [ ! -f "$WINGET_JSON" ]; then
     echo "winget-packages.json not found at $WINGET_JSON, skipping"
     exit 0
 fi
 
-echo "Syncing winget packages from $WINGET_JSON..."
+echo "=== Winget sync ==="
+WINDOWS_CONFIG="/mnt/c/Users/$(whoami)/.config/winget-packages.json"
+sync_to_windows "$WINGET_JSON" "$WINDOWS_CONFIG"
 cmd.exe /c "winget import --import-file %USERPROFILE%\\.config\\winget-packages.json --accept-source-agreements --accept-package-agreements --no-upgrade"
 echo "Winget sync complete."
+
+# ---- OpenCode configs ----
+echo "=== OpenCode config sync ==="
+WINDOWS_OPENCODE="/mnt/c/Users/$(whoami)/.config/opencode"
+sync_to_windows "$HOME/.config/opencode/opencode.jsonc" "$WINDOWS_OPENCODE/opencode.jsonc"
+sync_to_windows "$HOME/.config/opencode/oh-my-openagent.json" "$WINDOWS_OPENCODE/oh-my-openagent.json"
+echo "OpenCode config sync complete."
 {{- else -}}
 # Not WSL — skip (winget is Windows-only, managed from WSL)
 echo "Skipping winget sync (not running in WSL)"

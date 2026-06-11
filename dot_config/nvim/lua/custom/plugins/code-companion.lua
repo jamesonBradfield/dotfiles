@@ -7,7 +7,52 @@ return {
   opts = {
     log_level = 'ERROR',
 
+    voice = {
+      enabled = true,
+      auto_send = false,
+    },
+
     adapters = {
+      acp = {
+        opencode = {
+          name = 'opencode',
+          formatted_name = 'OpenCode',
+          type = 'acp',
+          roles = {
+            llm = 'assistant',
+            user = 'user',
+          },
+          commands = {
+            default = { 'opencode', 'acp' },
+          },
+          defaults = {
+            mcpServers = {},
+            timeout = 120000,
+          },
+          parameters = {
+            protocolVersion = 1,
+            clientCapabilities = {
+              fs = { readTextFile = true, writeTextFile = true },
+            },
+            clientInfo = {
+              name = 'CodeCompanion.nvim',
+              version = '1.0.0',
+            },
+          },
+          handlers = {
+            setup = function(self)
+              return true
+            end,
+            auth = function(self)
+              return true
+            end,
+            form_messages = function(self, messages, capabilities)
+              return require('codecompanion.adapters.acp.helpers').form_messages(self, messages, capabilities)
+            end,
+            on_exit = function(self, code) end,
+          },
+        },
+      },
       http = {
         qwen = function()
           return require('codecompanion.adapters').extend('openai_compatible', {
@@ -131,7 +176,7 @@ The runner exits 0 even when it finds NO tests. A PASS means: at least one test 
 
     interactions = {
       chat = {
-        adapter = { name = 'deepseek', model = 'deepseek-v4-flash', opts = { temperature = 0.7 } },
+        adapter = { name = 'opencode' },
         tools = {
           ['web_search'] = { enabled = false }, -- built-in requires TAVILY_API_KEY; use searxng instead
           ['searxng'] = {
@@ -147,7 +192,7 @@ The runner exits 0 even when it finds NO tests. A PASS means: at least one test 
           },
         },
         opts = {
-          default_tools = { 'memory' },
+          default_tools = { 'memory', 'searxng' },
           ---@param ctx CodeCompanion.SystemPrompt.Context
           system_prompt = function(ctx)
             return ctx.default_system_prompt
@@ -184,7 +229,12 @@ USER PEDANTS — the user's non-negotiable architectural preferences:
 - Godot: input polling (is_action_pressed, get_axis) belongs in _process or _unhandled_input, never in _physics_process. _physics_process reads state to apply forces; it does not determine state.
 - Godot: prefer enum flags (bit-masked or per-state consts) when multiple states can be active simultaneously, so state determination can live in _process.
 
-KNOWLEDGE MANAGEMENT (iwe): Use the Research prompt (:CodeCompanion research) for iwe-powered investigation with memory search. Use the Capture prompt (:CodeCompanion capture) to persist key learnings after completing work.
+DOCUMENTATION SOURCES — use the right tool per task:
+- @searxng for web searches (default). For Godot docs: engines="google", query="site:docs.godotengine.org <topic>". For Neovim: site:neovim.io/doc. For plugins: site:github.com. Use categories/engines params for precision.
+- context (MCP server) for version-specific library API docs (installed: Godot 4.6, React, TypeScript, Tailwind). Use when SearXNG is too generic — context returns precise API refs from local .db index. Query: context query <package>@<version> "<topic>".
+- iwe notes [[doc-sources-godot]], [[doc-sources-neovim]], [[doc-sources-codecompanion]] track the best search tool + strategy per topic. iwe_find these before guessing where to look.
+
+KNOWLEDGE MANAGEMENT (iwe): Use :CodeCompanion research for iwe-powered investigation with memory search. Use :CodeCompanion capture after completing work. When you encounter an error: FIRST iwe_find the error code + tag "error-solution" to check [[error-solution-bank]] for known fixes. If found, apply and adapt. If not found, solve it → then persist the solution to [[error-solution-bank]] following its template (searchable by error code, version, and tags).
 ]=],
                 ctx.language,
                 ctx.cwd,
@@ -193,6 +243,20 @@ KNOWLEDGE MANAGEMENT (iwe): Use the Research prompt (:CodeCompanion research) fo
                 ctx.os
               )
           end,
+        },
+      },
+      cli = {
+        agent = 'opencode',
+        opts = {
+          auto_insert = true,
+        },
+        agents = {
+          opencode = {
+            cmd = 'opencode',
+            args = {},
+            description = 'OpenCode TUI',
+            provider = 'terminal',
+          },
         },
       },
       inline = { adapter = { name = 'deepseek', model = 'deepseek-v4-flash', opts = { temperature = 0.7 } } },
@@ -207,6 +271,9 @@ KNOWLEDGE MANAGEMENT (iwe): Use the Research prompt (:CodeCompanion research) fo
         },
         playwright = {
           cmd = { 'mcp-rtk', '--', 'npx', '@playwright/mcp@latest', '--browser=firefox' },
+        },
+        context = {
+          cmd = { 'mcp-rtk', '--', 'cmd.exe', '/c', 'context serve' },
         },
       },
       opts = { default_servers = { 'iwe', 'sequential_thinking' } },

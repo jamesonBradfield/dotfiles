@@ -216,10 +216,13 @@
 				{
 					"PackageIdentifier" : "Microsoft.WindowsTerminal"
 				},
-				{
-					"PackageIdentifier" : "Microsoft.WSL"
-				}
-			],
+			{
+				"PackageIdentifier" : "Microsoft.WSL"
+			},
+			{
+				"PackageIdentifier" : "SST.opencode"
+			}
+		],
 			"SourceDetails" : 
 			{
 				"Argument" : "https://cdn.winget.microsoft.com/cache",
