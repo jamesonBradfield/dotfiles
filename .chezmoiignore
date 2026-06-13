@@ -1,0 +1,25 @@
+# .chezmoiignore — prevent tracking of cache, history, and ephemeral files
+
+# Shell history (large, frequently changing, sensitive)
+.bash_history
+.zsh_history
+dot_bash_history
+dot_zsh_history
+
+# Cache directories
+.cache/
+dot_cache/
+
+# OpenCode runtime data (not config)
+.local/share/opencode/
+dot_local/share/opencode/
+
+# Node modules in nvim config
+.config/nvim/node_modules/
+dot_config/nvim/node_modules/
+
+# Local/temp files
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

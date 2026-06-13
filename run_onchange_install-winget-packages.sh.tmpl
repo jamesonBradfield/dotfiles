@@ -1,4 +1,4 @@
-{{- if contains "WSL" .chezmoi.kernel.osrelease -}}
+{{- if and (hasKey .chezmoi.kernel "osrelease") (contains "WSL" .chezmoi.kernel.osrelease) -}}
 #!/bin/bash
 set -euo pipefail
 # Reconcile Windows packages via winget + sync opencode configs to Windows
