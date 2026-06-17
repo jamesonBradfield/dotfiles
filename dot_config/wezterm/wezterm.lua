@@ -9,18 +9,15 @@ config = {
 	font = wezterm.font("Hack Nerd Font"),
 	font_size = 11.0,
 
-	default_prog = { "wsl.exe", "~" },
+	default_prog = { "C:\\Program Files\\Git\\bin\\bash.exe", "-l" },
 	launch_menu = {
 		{
-			args = { "top" },
-		},
-		{
-			label = "WSL2",
-			args = { "wsl.exe", "~" },
+			label = "Git Bash",
+			args = { "C:\\Program Files\\Git\\bin\\bash.exe", "-l" },
 		},
 		{
 			label = "CMD",
-			args = { "cmd.exe", "~" },
+			args = { "cmd.exe" },
 		},
 		{
 			label = "PowerShell",

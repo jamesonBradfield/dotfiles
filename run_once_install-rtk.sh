@@ -9,5 +9,6 @@ if ! command -v cargo &>/dev/null; then
 fi
 
 echo "Installing rtk and mcp-rtk via cargo..."
-cargo install rtk-lite-cc mcp-rtk
+# REMOVED: rtk-lite-cc hijacks bash tool — mcp-rtk only
+cargo install mcp-rtk
 echo "Done: rtk and mcp-rtk installed."
